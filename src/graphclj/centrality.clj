@@ -2,12 +2,15 @@
     (:require [graphclj.graph :as graph]
               [clojure.set :as set]))
 
+(def g {1 {:neigh #{0 4 3}}, 0 {:neigh #{1 3}}, 3 {:neigh #{0 1 2}}, 4 {:neigh #{1}},2 {:neigh #{3}}})
+
 (declare key-val)
 (declare initDist)
+(declare examiner)
 
 (defn degrees [g]
   "Calculates the degree centrality for each node"
-   (loop [key (key-val g), res g]
+   (loop [key (key-val g), res {}]
      (if (seq key)
        (let [sg (get g (first key)), deg (count (get sg :neigh)), add (assoc sg :degree deg)]
          (recur (rest key) (assoc res (first key) add)))
@@ -15,22 +18,18 @@
 
 (defn key-val[g]
   "Returns of the key of the map"
-  (loop [m g, res []]
-    (if (seq m)
-      (let [ [k v] (first m)]
-        (recur (rest m) (conj res k)))
-      res)))
+  (into [] (map first g)))
 
 
 (defn initDist [g n]
-  "Initialise distance"
+  "Initialise distance map"
   (loop [res {}, s (key-val g)]
     (if (seq s)
-      (recur (assoc res (first s) 100) (rest s))
-      (assoc res n 0))))
+      (recur (assoc res (first s) 100.0) (rest s))
+      (assoc res n 0.0))))
 
 (defn examiner [g n r]
-  "return [sommet_ouvert, res]"
+  "return [sommet_ouvert, res] with res the result of the examination"
   (loop [s (into [] (get (get g n) :neigh)), res r, ouvert []]
     (if (seq s)
       (let [dy (get res (first s)), dx (inc (get res n))]
@@ -52,10 +51,15 @@
 
 
 (defn closeness [g n]
-  "Returns the closeness for node n in graph g")
-
+  "Returns the closeness for node n in graph g"
+  (reduce + (map (fn [x] (if (zero? x)
+                           0
+                           (/ 1 x))) (vals (distance g n)))))
 
 (defn closeness-all [g]
-  "Returns the closeness for all nodes in graph g")
-
-;;{1 {:neigh #{0 4 3}}, 0 {:neigh #{1 3}}, 3 {:neigh #{0 1 2}}, 4 {:neigh #{1}},2 {:neigh #{3}}
+  "Returns the closeness for all nodes in graph g"
+  (loop [key (key-val g), res {}]
+    (if (seq key)
+      (let [sg (get g (first key)), c (closeness g (first key)), add (assoc sg :close c)]
+        (recur (rest key) (assoc res (first key) add)))
+      res)))
