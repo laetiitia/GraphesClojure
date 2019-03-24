@@ -25,9 +25,9 @@
             (recur (inc cpt) n2 n1 (assoc m n1 {:neigh res})))
         m))))
 
-;; Create a graph without the neigh (with le list of value)
+;; Create a graph without the link(lines: [numbers] )
 (defn makeGraph [lines]
-  "Returns a hashmap contating the graph without t"
+  "Returns a hashmap contating the graph with nodes only"
   (loop [v lines, hmap {}]
     (if (seq v)
       (if (contains? hmap (first v))

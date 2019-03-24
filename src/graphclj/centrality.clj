@@ -1,8 +1,7 @@
 (ns graphclj.centrality
-    (:require [graphclj.graph :as graph]
-              [clojure.set :as set]))
+    (:require [graphclj.graph :as graph]))
 
-(def g {1 {:neigh #{0 4 3}}, 0 {:neigh #{1 3}}, 3 {:neigh #{0 1 2}}, 4 {:neigh #{1}},2 {:neigh #{3}}})
+;;(def g {1 {:neigh #{0 4 3}}, 0 {:neigh #{1 3}}, 3 {:neigh #{0 1 2}}, 4 {:neigh #{1}},2 {:neigh #{3}}})
 
 (declare key-val)
 (declare initDist)

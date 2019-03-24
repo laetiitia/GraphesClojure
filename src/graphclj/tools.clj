@@ -6,10 +6,8 @@
 (declare dotStyle)
 (declare reverseGraph)
 
-(def graph {1 {:neigh #{0 4 3}, :close 3.5, :degree 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1}})
-(def g2 {1 {:neigh #{0 4 3}, :close 3.5, :degree 3, :rank 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2, :rank 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3, :rank 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1, :rank 0}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1, :rank 0}})
-
-
+;;(def graph {1 {:neigh #{0 4 3}, :close 3.5, :degree 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1}})
+;;(def g2 {1 {:neigh #{0 4 3}, :close 3.5, :degree 3, :rank 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2, :rank 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3, :rank 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1, :rank 0}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1, :rank 0}})
 
 
 (defn readfile [f]
