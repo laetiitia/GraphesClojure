@@ -7,7 +7,7 @@
 (declare reverseGraph)
 
 ;;(def graph {1 {:neigh #{0 4 3}, :close 3.5, :degree 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1}})
-;;(def g2 {1 {:neigh #{0 4 3}, :close 3.5, :degree 3, :rank 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2, :rank 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3, :rank 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1, :rank 0}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1, :rank 0}})
+(def g2 {1 {:neigh #{0 4 3}, :close 3.5, :degree 3, :rank 3}, 0 {:neigh #{1 3}, :close 3.0, :degree 2, :rank 2}, 3 {:neigh #{0 1 2}, :close 3.5, :degree 3, :rank 3}, 4 {:neigh #{1}, :close 2.3333333333333335, :degree 1, :rank 0}, 2 {:neigh #{3}, :close 2.3333333333333335, :degree 1, :rank 0}})
 
 
 (defn readfile [f]
@@ -16,7 +16,7 @@
             (doall (line-seq rdr))))
 
 
-(defn rank-nodes [g,l]
+(defn rank-nodes [g l]
   "Ranks the nodes of the graph in relation to label l in accending order"
   (let [r (rank (getLabel g l))]
     (loop [k (keys g), res {}]
@@ -27,23 +27,21 @@
             (recur (rest k) (assoc res f s)))
         res))))
 
-
-(defn getLabel [g, l]
-  "Return a sort vector with : [ValueOfLabel node]"
-  (loop [m (vals g), k (keys g), res []]
-    (if (seq k)
-      (recur (rest m) (rest k) (conj res (vector (get (first m) l) (first k))))
-      res)))
+(defn getLabel [g l]
+  (let [v1 (into [] (map l (vals g))), v2 (into [] (keys g))]
+    (if (and (first v1) (first v2))
+      (into [] (map vector v1 v2))
+      nil)))
 
 
 (defn rank [hmap]
-  "Rank the result of getLabel"
-  (loop [m (into [] (sort hmap)), last -1, res {}, count 0]
+  "Rank the result of getLabel: [indice rank]"
+  (loop [m (sort hmap), last -1, val -1, res {}, count 0]
     (if (seq m)
       (let [[k v] (first m)]
         (if (= k last)
-          (recur (rest m) last (assoc res v (dec count)) (inc count))
-          (recur (rest m) k (assoc res v count) (inc count))))
+          (recur (rest m) last val (assoc res v val) (inc count))
+          (recur (rest m) k count (assoc res v count) (inc count))))
       res)))
 
 
@@ -58,7 +56,7 @@
 
 (defn to-dot [g]
   "Returns a string in dot format for graph g, each node is colored in relation to its ranking"
-  (str "graph g{" (dotStyle g) (apply str (interpose "\n" (reverseGraph g) ))"\n}"))
+  (str "graph g{" (dotStyle g) (apply str (interpose "\n" (reverseGraph g) )) "\n}"))
 
 
 (defn dotStyle [g]

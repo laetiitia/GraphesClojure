@@ -25,22 +25,17 @@
             (recur (inc cpt) n2 n1 (assoc m n1 {:neigh res})))
         m))))
 
-;; Create a graph without the link(lines: [numbers] )
+;; Create a graph without the link(lines: [numbers of node] )
 (defn makeGraph [lines]
   "Returns a hashmap contating the graph with nodes only"
-  (loop [v lines, hmap {}]
+  (loop [v (dedupe (sort lines)), hmap {}]
     (if (seq v)
-      (if (contains? hmap (first v))
-        (recur (rest v) hmap)
-        (recur (rest v) (assoc hmap (first v) {:neigh #{}})))
+      (recur (rest v) (assoc hmap (first v) {:neigh #{}}))
       hmap)))
 
 ;; String into Vecteur of number
 (defn intVect[s]
-    (loop [v (str/split s #" "), res []]
-      (if (seq v)
-        (recur (rest v) (conj res (Integer/parseInt (first v))))
-        res)))
+    (into [] (map #(Integer/parseInt %) (str/split s #" "))))
 
 (defn erdos-renyi-rnd [n,p]
   "Returns a G_{n,p} random graph, also known as an Erdős-Rényi graph"
